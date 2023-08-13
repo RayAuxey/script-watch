@@ -79,12 +79,64 @@ int main(int argc, char *argv[])
         {
         case IN_CREATE:
         {
+
+            if (make_executable(filepath) == -1)
+            {
+                perror("make_executable");
+                break;
+            }
+
+            char *bin_dir = "../bin/";
+            // printf("Filename c: %s\n", filename);
+            // printf("Dir c: %s\n", dir);
+
+            char *path_to_bin = join_strs(dir, bin_dir);
+            char *filename_without_extension = get_filename_without_extension(filename);
+            char *symlink_path = join_strs(path_to_bin, filename_without_extension);
+
+            // printf("Symlink path c: %s\n", symlink_path);
+            char info[4096];
+            sprintf(info, "Filename: %s, Dir: %s, Bin dir: %s, Path to bin: %s, Filename without extension: %s, Symlink path: %s", filename, dir, bin_dir, path_to_bin, filename_without_extension, symlink_path);
+            log_message(info);
+            strlcat(dir, filename, strlen(dir) + strlen(filename) + 1);
         }
         case IN_MODIFY:
         {
+            if (make_executable(filepath) == -1)
+            {
+                perror("make_executable");
+                break;
+            }
+
+            char *bin_dir = "../bin/";
+            // printf("Filename c: %s\n", filename);
+            // printf("Dir c: %s\n", dir);
+
+            char *path_to_bin = join_strs(dir, bin_dir);
+            char *filename_without_extension = get_filename_without_extension(filename);
+            char *symlink_path = join_strs(path_to_bin, filename_without_extension);
+            // printf("Symlink path c: %s\n", symlink_path);
+            char info[4096];
+            sprintf(info, "Filename: %s, Dir: %s, Bin dir: %s, Path to bin: %s, Filename without extension: %s, Symlink path: %s", filename, dir, bin_dir, path_to_bin, filename_without_extension, symlink_path);
+            log_message(info);
+
+            strlcat(dir, filename, strlen(dir) + strlen(filename) + 1);
+            if (symlink(
         }
         case IN_DELETE:
         {
+            char *bin_dir = "../bin/";
+            // printf("Filename c: %s\n", filename);
+            // printf("Dir c: %s\n", dir);
+
+            char *path_to_bin = join_strs(dir, bin_dir);
+            char *filename_without_extension = get_filename_without_extension(filename);
+            char *symlink_path = join_strs(path_to_bin, filename_without_extension);
+
+            // printf("Symlink path c: %s\n", symlink_path);
+            char info[40966];
+            sprintf(info, "Filename: %s, Dir: %s, Bin dir: %s, Path to bin: %s, Filename without extension: %s, Symlink path: %s", filename, dir, bin_dir, path_to_bin, filename_without_extension, symlink_path);
+            log_message(info);
         default:
             assert(0 && "Unknown event.");
             break;
