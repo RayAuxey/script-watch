@@ -174,6 +174,8 @@ int main(int argc, char *argv[])
             sprintf(message, "File deleted: %s -> %s", filename, symlink_path);
             log_message(message);
             break;
+        }
+
         default:
             assert(0 && "Unknown event.");
             break;
