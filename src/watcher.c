@@ -79,3 +79,26 @@ void log_message_with_priority(const char *message, int priority)
 
     fprintf(stderr, "%s\n", message);
 }
+bool is_systemd_parent()
+{
+    pid_t parent_pid = getppid();
+    char filename[256];
+    snprintf(filename, sizeof(filename), "/proc/%d/stat", parent_pid);
+
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL)
+    {
+        return false;
+    }
+
+    char stat[1024];
+    fgets(stat, sizeof(stat), fp);
+    fclose(fp);
+
+    if (strstr(stat, "systemd") != NULL)
+    {
+        return true;
+    }
+
+    return false;
+}
