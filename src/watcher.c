@@ -46,6 +46,24 @@ int main(int argc, char *argv[])
         close(fd);
         return EXIT_FAILURE;
     }
+    char buffer[4096];
+    ssize_t len;
+    struct inotify_event *event;
+    log_message("Watching directory...");
+
+    while (1)
+    {
+        len = read(fd, buffer, sizeof(buffer));
+        if (len == -1)
+        {
+            perror("read");
+            break;
+        }
+        event = (struct inotify_event *)buffer;
+    }
+
+    inotify_rm_watch(fd, wd);
+    close(fd);
 
     return EXIT_SUCCESS;
 }
