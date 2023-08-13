@@ -164,6 +164,16 @@ int main(int argc, char *argv[])
             char info[40966];
             sprintf(info, "Filename: %s, Dir: %s, Bin dir: %s, Path to bin: %s, Filename without extension: %s, Symlink path: %s", filename, dir, bin_dir, path_to_bin, filename_without_extension, symlink_path);
             log_message(info);
+
+            if (unlink(symlink_path) == -1)
+            {
+                perror("unlink");
+                break;
+            }
+            char message[100];
+            sprintf(message, "File deleted: %s -> %s", filename, symlink_path);
+            log_message(message);
+            break;
         default:
             assert(0 && "Unknown event.");
             break;
