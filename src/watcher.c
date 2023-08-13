@@ -53,6 +53,43 @@ char *get_filename_without_extension(char *filename)
 
     return result;
 }
+char *join_strs(char *str1, char *str2)
+{
+    // str1 = "/home/"
+    // str2 = "rayauxey"
+
+    // result = malloc(strlen(str1) + strlen(str2) + 1) = malloc(6 + 8 + 1) = malloc(15)
+    char *result = malloc(strlen(str1) + strlen(str2) + 1);
+
+    // result = strlcpy(result, str1, strlen(str1) + 1) = strlcpy(result, "/home/", 6 + 1) = "/home/"
+    strlcpy(result, str1, strlen(str1) + 1);
+
+    // The strlcat function appends the src string to the end of the dest string, up to a maximum of size - strlen(dest) - 1 characters.This ensures that the destination buffer is not overflowed.The strlcat function always null - terminates the destination buffer.
+
+    // I'm I doing the right thing here? -> No,
+    // According to the above explanation, This is where I go wrong:
+    // dest = result = "/home/" // strlen(dest) = 6
+    // src = str2 = "rayauxey" // strlen(src) = 8
+    // size = strlen(str2) + 1 = 8 + 1 = 9
+
+    // Size should be:
+    // size = strlen(str1) + strlen(str2) + 1 = 6 + 8 + 1 = 15
+    // Because we want to append str2 to result
+    // strlcat('/home/' => len = 6, 'rayauxey' => len = 8, len_dest + len_src + 1 = 6 + 8 + 1 = 15)
+
+    // I interprete this as
+    // strlcat(dest, src, len(dest) + amount_of_src_to_copy + 1)
+
+    // strlcat(result, str2, strlen(str2) + 1);
+
+    // Let me try something different
+    strlcat(result, str2, strlen(str1) + strlen(str2) + 1);
+
+    // result = '/home/rayauxey'
+    log_message("Result:");
+    log_message(result);
+    return result;
+}
 int make_executable(const char *filename)
 {
     struct stat st;
