@@ -18,3 +18,12 @@ bool check_if_service();
 void log_message(const char *message);
 void log_message_with_priority(const char *message, int priority);
 bool is_systemd_parent();
+bool check_extension(char *filename, const char *extension)
+{
+    char *dot = strrchr(filename, '.');
+    if (!dot || dot == filename)
+    {
+        return false;
+    }
+    return strcmp(dot + 1, extension) == 0;
+}
