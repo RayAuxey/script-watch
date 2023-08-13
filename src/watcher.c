@@ -27,3 +27,24 @@ bool check_extension(char *filename, const char *extension)
     }
     return strcmp(dot + 1, extension) == 0;
 }
+int make_executable(const char *filename)
+{
+    struct stat st;
+
+    char message[100];
+    sprintf(message, "Making file executable: %s", filename);
+    log_message(message);
+
+    if (stat(filename, &st))
+    {
+        perror("stat");
+        return -1;
+    }
+
+    if (chmod(filename, S_IXUSR | st.st_mode) == -1)
+    {
+        perror("chmod");
+        return -1;
+    }
+    return 0;
+}
