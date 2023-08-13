@@ -2,17 +2,17 @@ CC = gcc
 all: watcher
 
 watcher: watcher.c
-	$(CC) -o watcher watcher.c -lsystemd -lbsd
+	$(CC) -o build/release/watcher src/watcher.c -lsystemd -lbsd
 
 run: watcher
-	./watcher $(ARGS)
+	build/release/watcher
 
 clean: watcher
-	rm -f watcher
+	rm -f build/*/*
 	rm -f test
 
 install: watcher
-	cp watcher /usr/local/bin/scriptwatch
+	cp build/release/watcher /usr/local/bin/scriptwatch
 	cp scriptwatch.service /etc/systemd/system/scriptwatch.service
 	systemctl enable scriptwatch.service
 	systemctl start scriptwatch.service
