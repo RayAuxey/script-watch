@@ -39,6 +39,13 @@ int main(int argc, char *argv[])
     const char *directory = IS_SERVICE ? "/home/rayauxey/.local/scripts/" : argv[1];
     const char *extension = IS_SERVICE ? "sh" : argv[2];
 
+    int wd = inotify_add_watch(fd, directory, IN_CREATE | IN_MODIFY | IN_DELETE);
+    if (wd == -1)
+    {
+        perror("inotify_add_watch");
+        close(fd);
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
