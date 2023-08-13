@@ -27,6 +27,32 @@ bool check_extension(char *filename, const char *extension)
     }
     return strcmp(dot + 1, extension) == 0;
 }
+char *get_filename_without_extension(char *filename)
+{
+    char *dot = strrchr(filename, '.');
+    if (!dot || dot == filename)
+    {
+        return filename;
+    }
+    // filename = "test.sh", dot = ".sh"
+    // strlen(filename) = 7, strlen(dot) = 3
+    // strlen(filename) - strlen(dot) = 4
+    // result = malloc(7 - 3) = malloc(4)
+    // char *result = malloc(strlen(filename) - strlen(dot));
+    // // result = strlcpy(result, filename, 4) = strlcpy(result, "test.sh", 4) = "test" // Wrong!!
+
+    // // The strlcpy function copies at most size - 1 characters from the source string to the destination buffer, and always null - terminates the destination buffer.If the source string is longer than size - 1 characters, the destination buffer is filled with the first size - 1 characters of the source string, followed by a null terminator.
+
+    // // What is size - 1 in this case? => strlen(filename) - strlen(dot) - 1 = 4 - 1 = 3
+    // // So strlcpy(result, filename, 4)  => strlcpy(result, "test.sh", 4) => "tes"
+    // strlcpy(result, filename, strlen(filename) - strlen(dot));
+
+    // Correction:
+    char *result = malloc(strlen(filename) - strlen(dot) + 1);
+    strlcpy(result, filename, strlen(filename) - strlen(dot) + 1);
+
+    return result;
+}
 int make_executable(const char *filename)
 {
     struct stat st;
