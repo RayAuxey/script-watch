@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
     ssize_t len;
     struct inotify_event *event;
     log_message("Watching directory...");
+    char last_filename[4096] = "";
+    time_t last_time = time(NULL);
 
     while (1)
     {
@@ -60,6 +62,19 @@ int main(int argc, char *argv[])
             break;
         }
         event = (struct inotify_event *)buffer;
+        char *filename = event->name;
+        if (!check_extension(filename, extension))
+        {
+            // printf("Skipping file with wrong extension: %s\n", filename);
+            continue;
+        }
+        if (strcmp(filename, last_filename) == 0 && time(NULL) - last_time < 1)
+        {
+            // printf("Skipping duplicate event: %s %s\n", event_type, filename);
+            continue;
+        }
+        strcpy(last_filename, filename);
+        last_time = time(NULL);
     }
 
     inotify_rm_watch(fd, wd);
