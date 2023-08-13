@@ -18,6 +18,21 @@ bool check_if_service();
 void log_message(const char *message);
 void log_message_with_priority(const char *message, int priority);
 bool is_systemd_parent();
+bool IS_SERVICE = false;
+int main(int argc, char *argv[])
+{
+    log_message("Starting up...");
+    IS_SERVICE = check_if_service();
+
+    if (argc != 3 && !IS_SERVICE)
+    {
+        log_message_with_priority("Usage: ./watcher <directory> <extension>", LOG_ERR);
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+
 bool check_extension(char *filename, const char *extension)
 {
     char *dot = strrchr(filename, '.');
