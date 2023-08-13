@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/inotify.h>
+#include <string.h>
+#include <bsd/string.h>
+#include <time.h>
+#include <stdbool.h>
+#include <errno.h>
+#include <assert.h>
+#include <sys/stat.h>
+#include <systemd/sd-journal.h>
