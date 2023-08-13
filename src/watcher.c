@@ -73,6 +73,22 @@ int main(int argc, char *argv[])
             // printf("Skipping duplicate event: %s %s\n", event_type, filename);
             continue;
         }
+        char *dir = strdup(directory);
+        const char *filepath = join_strs(dir, filename);
+        switch (event->mask)
+        {
+        case IN_CREATE:
+        {
+        }
+        case IN_MODIFY:
+        {
+        }
+        case IN_DELETE:
+        {
+        default:
+            assert(0 && "Unknown event.");
+            break;
+        }
         strcpy(last_filename, filename);
         last_time = time(NULL);
     }
