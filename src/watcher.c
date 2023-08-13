@@ -69,3 +69,13 @@ void log_message(const char *message)
 
     printf("%s\n", message);
 }
+void log_message_with_priority(const char *message, int priority)
+{
+    if (IS_SERVICE)
+    {
+        sd_journal_send("MESSAGE=%s", message, "PRIORITY=%i", priority, NULL);
+        return;
+    }
+
+    fprintf(stderr, "%s\n", message);
+}
