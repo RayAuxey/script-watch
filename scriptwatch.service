@@ -1,0 +1,14 @@
+[Unit]
+Description=Script Watcher
+# After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/scriptwatch
+Restart=always
+RestartSec=5
+User=root
+Environment=LANG=en_US.UTF-8
+
+[Install]
+WantedBy=multi-user.target
