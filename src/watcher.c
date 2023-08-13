@@ -59,3 +59,13 @@ bool check_if_service()
     log_message("Running as a standalone program");
     return false;
 }
+void log_message(const char *message)
+{
+    if (IS_SERVICE)
+    {
+        sd_journal_send("MESSAGE=%s", message, "PRIORITY=%i", LOG_INFO, NULL);
+        return;
+    }
+
+    printf("%s\n", message);
+}
