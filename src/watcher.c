@@ -99,6 +99,20 @@ int main(int argc, char *argv[])
             sprintf(info, "Filename: %s, Dir: %s, Bin dir: %s, Path to bin: %s, Filename without extension: %s, Symlink path: %s", filename, dir, bin_dir, path_to_bin, filename_without_extension, symlink_path);
             log_message(info);
             strlcat(dir, filename, strlen(dir) + strlen(filename) + 1);
+            if (symlink(
+                    dir,
+                    symlink_path) == -1)
+            {
+                if (errno == EEXIST)
+                    break;
+
+                perror("symlink");
+                break;
+            }
+            char message[100];
+            sprintf(message, "File created: %s -> %s", filename, symlink_path);
+            log_message(message);
+            break;
         }
         case IN_MODIFY:
         {
@@ -122,6 +136,19 @@ int main(int argc, char *argv[])
 
             strlcat(dir, filename, strlen(dir) + strlen(filename) + 1);
             if (symlink(
+                    dir,
+                    symlink_path) == -1)
+            {
+                if (errno == EEXIST)
+                    break;
+
+                perror("symlink");
+                break;
+            }
+            char message[100];
+            sprintf(message, "File modified: %s -> %s", filename, symlink_path);
+            log_message(message);
+            break;
         }
         case IN_DELETE:
         {
