@@ -1,0 +1,6 @@
+// Gitignore
+
+*.code-workspace
+test.c
+test
+*-debug
