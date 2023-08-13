@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <sys/stat.h>
 #include <systemd/sd-journal.h>
+
 bool check_extension(char *filename, const char *extension);
 char *get_filename_without_extension(char *filename);
 char *join_strs(char *str1, char *str2);
@@ -18,7 +19,9 @@ bool check_if_service();
 void log_message(const char *message);
 void log_message_with_priority(const char *message, int priority);
 bool is_systemd_parent();
+
 bool IS_SERVICE = false;
+
 int main(int argc, char *argv[])
 {
     log_message("Starting up...");
@@ -29,6 +32,7 @@ int main(int argc, char *argv[])
         log_message_with_priority("Usage: ./watcher <directory> <extension>", LOG_ERR);
         return EXIT_FAILURE;
     }
+
     int fd = inotify_init(); // Initialize inotify
     if (fd == -1)
     {
@@ -46,10 +50,13 @@ int main(int argc, char *argv[])
         close(fd);
         return EXIT_FAILURE;
     }
+
     char buffer[4096];
     ssize_t len;
     struct inotify_event *event;
+
     log_message("Watching directory...");
+
     char last_filename[4096] = "";
     time_t last_time = time(NULL);
 
@@ -61,24 +68,31 @@ int main(int argc, char *argv[])
             perror("read");
             break;
         }
+
         event = (struct inotify_event *)buffer;
+
         char *filename = event->name;
+
         if (!check_extension(filename, extension))
         {
             // printf("Skipping file with wrong extension: %s\n", filename);
             continue;
         }
+
         if (strcmp(filename, last_filename) == 0 && time(NULL) - last_time < 1)
         {
             // printf("Skipping duplicate event: %s %s\n", event_type, filename);
             continue;
         }
+
         char *dir = strdup(directory);
         const char *filepath = join_strs(dir, filename);
         switch (event->mask)
         {
         case IN_CREATE:
         {
+
+            // Make the file executable
 
             if (make_executable(filepath) == -1)
             {
@@ -180,6 +194,7 @@ int main(int argc, char *argv[])
             assert(0 && "Unknown event.");
             break;
         }
+
         strcpy(last_filename, filename);
         last_time = time(NULL);
     }
@@ -199,6 +214,7 @@ bool check_extension(char *filename, const char *extension)
     }
     return strcmp(dot + 1, extension) == 0;
 }
+
 char *get_filename_without_extension(char *filename)
 {
     char *dot = strrchr(filename, '.');
@@ -225,6 +241,7 @@ char *get_filename_without_extension(char *filename)
 
     return result;
 }
+
 char *join_strs(char *str1, char *str2)
 {
     // str1 = "/home/"
@@ -262,6 +279,7 @@ char *join_strs(char *str1, char *str2)
     log_message(result);
     return result;
 }
+
 int make_executable(const char *filename)
 {
     struct stat st;
@@ -283,6 +301,7 @@ int make_executable(const char *filename)
     }
     return 0;
 }
+
 bool check_if_service()
 {
     if (is_systemd_parent())
@@ -294,6 +313,7 @@ bool check_if_service()
     log_message("Running as a standalone program");
     return false;
 }
+
 void log_message(const char *message)
 {
     if (IS_SERVICE)
@@ -304,6 +324,7 @@ void log_message(const char *message)
 
     printf("%s\n", message);
 }
+
 void log_message_with_priority(const char *message, int priority)
 {
     if (IS_SERVICE)
@@ -314,6 +335,7 @@ void log_message_with_priority(const char *message, int priority)
 
     fprintf(stderr, "%s\n", message);
 }
+
 bool is_systemd_parent()
 {
     pid_t parent_pid = getppid();
