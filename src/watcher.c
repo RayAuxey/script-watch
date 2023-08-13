@@ -29,6 +29,13 @@ int main(int argc, char *argv[])
         log_message_with_priority("Usage: ./watcher <directory> <extension>", LOG_ERR);
         return EXIT_FAILURE;
     }
+    int fd = inotify_init(); // Initialize inotify
+    if (fd == -1)
+    {
+        perror("inotify_init");
+        return EXIT_FAILURE;
+    }
+
 
     return EXIT_SUCCESS;
 }
