@@ -48,3 +48,14 @@ int make_executable(const char *filename)
     }
     return 0;
 }
+bool check_if_service()
+{
+    if (is_systemd_parent())
+    {
+        log_message("Running as a systemd service");
+        return true;
+    }
+
+    log_message("Running as a standalone program");
+    return false;
+}
