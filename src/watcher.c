@@ -36,6 +36,9 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    const char *directory = IS_SERVICE ? "/home/rayauxey/.local/scripts/" : argv[1];
+    const char *extension = IS_SERVICE ? "sh" : argv[2];
+
 
     return EXIT_SUCCESS;
 }
